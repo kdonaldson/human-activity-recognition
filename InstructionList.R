@@ -1,19 +1,9 @@
 #The instruction list
-#Ideally a computer script (in R :-), but I suppose Python is ok too...)
-#The input for the script is the raw data
-#The output is the processed, tidy data
-#There are no parameters to the script
-#In some cases it will not be possible to script every step. In that case you should provide instructions like:
-
-#Step 1 - take the raw file, run version 3.1.2 of summarize software with parameters a=1, b=2, c=3
-#Step 2 - run the software separately for each sample
-#Step 3 - take column three of outputfile.out for each sample and that is the corresponding row in the output data set
 
 library(dplyr)
 library(reshape2)
 
-#this.dir <- dirname(parent.frame(2)$ofile)
-#setwd(this.dir)
+# Set this.dir appropriately for your environment 
 this.dir <- "/Users/kdonaldson/Projects/GettingCleaningData/Project/human-activity-recognition"
 
 setwd(paste(this.dir, "/UCI HAR Dataset/", sep = ""))
