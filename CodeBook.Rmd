@@ -14,9 +14,9 @@ Some other important tips
 A common format for this document is a Word/text file.
 There should be a section called "Study design" that has a thorough description of how you collected the data.
 There must be a section called "Code book" that describes each variable and its units.
+The codebook still has the specific description of the tidy data file contents (and you mention that it exists and it's role in the ReadMe)
 
-
-
+Yes, and it is really important you include it. Go back to quiz 1 and look at the codebook there for inspiration. Be sure it goes on github with the analysis script and the readme. People have lost major marks in previous sessions by having a brain-fade and forgetting about critical files so not getting the marks: you want a run_analysis R script, a ReadMe markdown document, a Codebook markdown document, and a tidy data text file (this last goes on Coursera).
 
 
 
