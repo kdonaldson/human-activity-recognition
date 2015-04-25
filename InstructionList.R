@@ -16,30 +16,10 @@ subjects_test = read.table("subject_test.txt")
 activities_test = read.table("y_test.txt")
 features_test = read.table("X_test.txt")
 
-setwd(paste(this.dir, "/UCI HAR Dataset/test/Inertial Signals/", sep = ""))
-files = list.files(path = ".", pattern = NULL, all.files = FALSE)
-for (file in files ) {
-  file_name = strsplit(file, "\\.")[[1]]
-  assign(file_name[1], read.table(file))
-}
-
-
 setwd(paste(this.dir, "/UCI HAR Dataset/train/", sep = ""))
 subjects_train = read.table("subject_train.txt")
 activities_train = read.table("y_train.txt")
 features_train = read.table("X_train.txt")
-
-setwd(paste(this.dir, "/UCI HAR Dataset/train/Inertial Signals/", sep = ""))
-files = list.files(path = ".", pattern = NULL, all.files = FALSE)
-for (file in files ) {
-  file_name = strsplit(file, "\\.")[[1]]
-  assign(file_name[1], read.table(file))
-}
-
-# Cleanup
-rm(file)
-rm(file_name)
-rm(files)
 
 # Rename subjects vectors
 subjects_train = rename(subjects_train, subject=V1)
@@ -72,52 +52,19 @@ observations = rbind(train, test)
 # Extracts only the measurements on the mean and standard deviation for each measurement.
 observations = select(.data = observations, subject, activity, matches("(mean|std)"))
 
-body_acc_x = rbind(body_acc_x_train, body_acc_x_test)
-observations_body_acc_x = cbind(observations, body_acc_x, row.names = NULL)
-observations_body_acc_x_melt <- melt(observations_body_acc_x, id=1:88)
+# Loop over the variables in the observations table
+# Using dcast summarize the variable by subject and activity
+# Add the variable summarized to the table in the variable column
+# Thereby creating an intermediary long form table of means for each variable
+meanvariables = data.frame()
+for(varname in names(observations)[3:88]) {  #Make replacements
+  meanvariables = rbind(meanvariables, assign(paste("mean", varname, sep="_"), cbind(dcast(observations, subject ~ activity, value.var = varname, mean), measure = varname)))
+}
 
-body_acc_y = rbind(body_acc_y_train, body_acc_y_test)
-observations_body_acc_y = cbind(observations, body_acc_y, row.names = NULL)
-observations_body_acc_y_melt <- melt(observations_body_acc_y, id=1:88)
+# reorder by column name
+meanvariables = meanvariables[c("subject", "measure", "LAYING", "SITTING", "STANDING", "WALKING", "WALKING_DOWNSTAIRS", "WALKING_UPSTAIRS")]
 
-body_acc_z = rbind(body_acc_z_train, body_acc_z_test)
-observations_body_acc_z = cbind(observations, body_acc_z, row.names = NULL)
-observations_body_acc_z_melt <- melt(observations_body_acc_z, id=1:88)
+colnames(meanvariables) <- tolower(colnames(meanvariables))
 
-body_gyro_x = rbind(body_gyro_x_train, body_gyro_x_test)
-observations_body_gyro_x = cbind(observations, body_gyro_x, row.names = NULL)
-observations_body_gyro_x_melt <- melt(observations_body_gyro_x, id=1:88)
-
-body_gyro_y = rbind(body_gyro_y_train, body_gyro_y_test)
-observations_body_gyro_y = cbind(observations, body_gyro_x, row.names = NULL)
-observations_body_gyro_y_melt <- melt(observations_body_gyro_y, id=1:88)
-
-body_gyro_z = rbind(body_gyro_z_train, body_gyro_z_test)
-observations_body_gyro_z = cbind(observations, body_gyro_z, row.names = NULL)
-observations_body_gyro_z_melt <- melt(observations_body_gyro_z, id=1:88)
-
-total_acc_x = rbind(total_acc_x_train, total_acc_x_test)
-observations_total_acc_x = cbind(observations, total_acc_x, row.names = NULL)
-observations_total_acc_x_melt <- melt(observations_total_acc_x, id=1:88)
-
-total_acc_y = rbind(total_acc_y_train, total_acc_y_test)
-observations_total_acc_y = cbind(observations, total_acc_y, row.names = NULL)
-observations_total_acc_y_melt <- melt(observations_total_acc_y, id=1:88)
-
-total_acc_z = rbind(total_acc_z_train, total_acc_z_test)
-observations_total_acc_z = cbind(observations, total_acc_z, row.names = NULL)
-observations_total_acc_z_melt <- melt(observations_total_acc_z, id=1:88)
-
-observations = cbind(
-  observations, 
-  body_acc_x = observations_body_acc_x_melt$value, 
-  body_acc_y = observations_body_acc_y_melt$value, 
-  body_acc_z = observations_body_acc_z_melt$value, 
-  body_gyro_x = observations_body_gyro_x_melt$value,
-  body_gyro_y = observations_body_gyro_y_melt$value,
-  body_gyro_z = observations_body_gyro_z_melt$value, 
-  total_acc_x = observations_total_acc_x_melt$value, 
-  total_acc_y = observations_total_acc_y_melt$value, 
-  total_acc_z = observations_total_acc_z_melt$value, 
-  row.names = NULL 
-  )
+setwd(this.dir)
+write.table(meanvariables, file = "tidy_data_set.txt", row.names=FALSE) 
