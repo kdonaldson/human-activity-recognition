@@ -1,4 +1,8 @@
-# _Tidy_ Human Activity Recognition Using Smartphones Dataset
+---
+title: "Tidy Human Activity Recognition Using Smartphones Dataset"
+author: "Keith D. Donldson"
+date: "April 26, 2015"
+---
 
 The run_analysis.R script:
 
