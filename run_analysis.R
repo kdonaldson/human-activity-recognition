@@ -73,11 +73,11 @@ observations = select(.data = observations, subject, activity, matches("(mean|st
 meanvariables = data.frame()  # Initialize data table
 for(varname in names(observations)[3:88]) {
   
-  meanvariables = rbind(meanvariables, assign(paste("mean", varname, sep="_"), cbind(dcast(observations, subject ~ activity, value.var = varname, mean), measure = varname)))
+  meanvariables = rbind(meanvariables, assign(paste("mean", varname, sep="_"), cbind(dcast(observations, subject ~ activity, value.var = varname, mean), measurement = varname)))
 }
 
 # reorder by column name
-meanvariables = meanvariables[c("subject", "measure", "LAYING", "SITTING", "STANDING", "WALKING", "WALKING_DOWNSTAIRS", "WALKING_UPSTAIRS")]
+meanvariables = meanvariables[c("subject", "measurement", "LAYING", "SITTING", "STANDING", "WALKING", "WALKING_DOWNSTAIRS", "WALKING_UPSTAIRS")]
 
 # convert all column names to lowercase for consistency
 colnames(meanvariables) <- tolower(colnames(meanvariables))
