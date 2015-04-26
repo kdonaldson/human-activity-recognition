@@ -2,7 +2,7 @@
 title: "CodeBook"
 author: "Keith D. Donldson"
 date: "April 26, 2015"
-output: html_document
+output: tidy_data_set.txt
 ---
 
 This codebook modifies and updates the codebooks from the Human Activity Recognition Using Smartphones Data Set found in the UCI Machine Learning Repository.  Special attention is given to the tidy data set that is obtained from this data.
